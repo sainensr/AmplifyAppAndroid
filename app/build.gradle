@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.amazonaws.appsync' // REQUIRED
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.example.myamplifyappandroid"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // Enable multidex support (if supporting min SDK < 21)
+        multiDexEnabled true
+    }
+
+    compileOptions {
+        // Support for Java 8 features
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    // Amplify core dependency
+    implementation 'com.amplifyframework:core:1.3.1'
+
+    // Multidex dependency (if supporting min SDK < 21)
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    // Support for Java 8 features
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
+    //for appsync
+    implementation 'com.amazonaws:aws-android-sdk-appsync:3.1.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+    //for pinpoint
+    implementation 'com.amplifyframework:aws-analytics-pinpoint:1.3.1'
+    implementation 'com.amplifyframework:aws-auth-cognito:1.3.1'
+}
