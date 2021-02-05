@@ -8,7 +8,15 @@
 * npm version used: 6.14.4
 * node version used: v14.3.0
 
-## Steps to build the App:
+## App also tested on following updated versions:
+* Android Studio 4.1.2
+* Android Gradle Plugin Version used: 4.1.2
+* Gradle Version: 6.5
+* amplify CLI version used: 4.41.2
+* npm version used: 6.14.4
+* node version used: v14.3.0
+
+## Steps to build the App using AppSync client to call the AppSync GQL Schema operations :
 1. Create a Project with Empty Activity following https://docs.amplify.aws/start/getting-started/setup/q/integration/android#create-a-new-android-application
 2. Change the Project level build.gradle file to as follows:
 
@@ -170,11 +178,125 @@ public class MainActivity extends AppCompatActivity {
 
 13. To execute the GraphQPL operations of "Event APP" AppSync API, create "executeAppSyncAPISchemaOperations();" method in the "MainActivity.java" file.
 
-14. "AppSyncAPICalls.java" class file has methods which can be modified depending on the schema of the backend API on AWS AppSync.
+14. "AppSyncClientGQlSchemaOperationCalls.java" class file has methods which can be modified depending on the schema of the backend API on AWS AppSync.
 
 15. "amplifyconfiguration.json" and "awsconfiguration.json" contains the AppSync API endpoint URL and API_key that Android App uses to communicate.
 
-16. Sucessfully build and run the android app to see the output of the queries in the "Logcat".
+16. Modify AndroidManifest.xml file as follows to allow user to provide required permissions for the functioning of app:
+```
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.amplifyappandroid">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
+    </application>
+
+</manifest>
+```
+
+17. Sucessfully build and run the android app to see the output of the queries in the "Logcat".
+
+## Steps Using Amplify client to call the AppSync GQL Schema operations
+The minimum required amplify cli version is >=4.37.0 updating the Gradle files with Amplify framework tools and syncing automatically updates the amplify version if its <4.37.0
+
+1. Modify the Project Gradle file as follows with "com.amplifyframework:amplify-tools" which will be useful to execute Amplify Client call "Amplify.API.mutate()" and import libraries such as " ModelMutation, GsonVariablesSerializer,..etc" https://docs.amplify.aws/lib/graphqlapi/getting-started/q/platform/android:
+
+```
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.0.1"
+        classpath 'com.amazonaws:aws-android-sdk-appsync-gradle-plugin:3.1.0'
+        //for amplify client to query AppSync API
+        classpath 'com.amplifyframework:amplify-tools-gradle-plugin:1.0.2'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+//for amplify client to query AppSync API
+apply plugin: 'com.amplifyframework.amplifytools'
+```
+2. Modify the app gradle file to add amplify-tools dependency as follows:
+```
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.0.1"
+        classpath 'com.amazonaws:aws-android-sdk-appsync-gradle-plugin:3.1.0'
+        //for amplify client to query AppSync API
+        classpath 'com.amplifyframework:amplify-tools-gradle-plugin:1.0.2'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+//for amplify client to query AppSync API
+apply plugin: 'com.amplifyframework.amplifytools'
+```
+3. Since i have added the API externally using ```Amplify add codegen --apiId``` as of now codegen doesn't recognize the model directly as per https://github.com/aws-amplify/amplify-codegen/issues/20 and https://github.com/kcwinner/cdk-appsync-transformer-demo to make use of Amplify Client for calling AppSync API such as "Amplify.API.mutate(), Amplify.API.query()". If the schema was added with @models as per https://docs.amplify.aws/lib/graphqlapi/getting-started/q/platform/android#configure-api the Amplify.API.mutate() can be used directly to recognize the generated classes. Skip from 4- if you haven't used ```Amplify add codegen --apiId``` 
 
 
 ## References:
@@ -182,3 +304,6 @@ public class MainActivity extends AppCompatActivity {
 2. https://github.com/awslabs/aws-mobile-appsync-sdk-android
 3. https://docs.amplify.aws/sdk/api/graphql/q/platform/android#run-a-mutation
 4. https://docs.amplify.aws/lib/project-setup/use-existing-resources/q/platform/android
+5. https://www.geeksforgeeks.org/how-to-build-a-todo-android-application-with-aws-dynamodb-as-database/
+6. https://www.npmjs.com/package/@aws-amplify/cli
+7. https://docs.amplify.aws/lib/graphqlapi/concepts/q/platform/android#using-aws-appsync

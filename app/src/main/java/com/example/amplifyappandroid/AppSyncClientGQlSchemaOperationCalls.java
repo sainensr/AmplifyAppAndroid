@@ -17,11 +17,11 @@ import com.apollographql.apollo.exception.ApolloException;
 
 import javax.annotation.Nonnull;
 
-public class AppSyncAPICalls {
+public class AppSyncClientGQlSchemaOperationCalls {
     private AWSAppSyncClient mAWSAppSyncClient;
     private AppSyncSubscriptionCall<SubscribeToEventCommentsSubscription.Data> subscriptionWatcher;
 
-    public AppSyncAPICalls(AWSAppSyncClient mAWSAppSyncClient){
+    public AppSyncClientGQlSchemaOperationCalls(AWSAppSyncClient mAWSAppSyncClient){
         this.mAWSAppSyncClient = mAWSAppSyncClient;
     }
 
@@ -110,8 +110,8 @@ public class AppSyncAPICalls {
                 });
     }
 
-    // Subscription function code
-    private void callSubscribeToEventCommentsSubscription(String eventId) {
+    // Not working Subscription function code
+    public void callSubscribeToEventCommentsSubscription(String eventId) {
         SubscribeToEventCommentsSubscription subscription = SubscribeToEventCommentsSubscription.builder().eventId(eventId).build();
         subscriptionWatcher = mAWSAppSyncClient.subscribe(subscription);
         subscriptionWatcher.execute(new AppSyncSubscriptionCall.Callback<SubscribeToEventCommentsSubscription.Data>() {

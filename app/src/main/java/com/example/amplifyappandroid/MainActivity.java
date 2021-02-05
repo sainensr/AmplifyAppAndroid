@@ -40,11 +40,13 @@ public class MainActivity extends AppCompatActivity {
 
     //Executes all operations defined in the AppSync Event APP API
     public void executeAppSyncAPISchemaOperations(){
-        AppSyncAPICalls mAppSyncAPICall = new AppSyncAPICalls(mAWSAppSyncClient);
-        mAppSyncAPICall.callListEventsQuery();
-        mAppSyncAPICall.callGetEventQuery("3ac79d17-b08e-49e3-8690-22cb9b5a41fd");
-        //mAppSyncAPICall.callCreateEventMutation();
-        //mAppSyncAPICall.callDeleteEventMutation("3ac79d17-b08e-49e3-8690-22cb9b5a41fd");
+        AppSyncClientGQlSchemaOperationCalls mAppSyncClientGQlSchemaOperationCalls = new AppSyncClientGQlSchemaOperationCalls(mAWSAppSyncClient);
+        mAppSyncClientGQlSchemaOperationCalls.callListEventsQuery();
+        //mAppSyncClientGQlSchemaOperationCalls.callGetEventQuery("3ac79d17-b08e-49e3-8690-22cb9b5a41fd");
+        //mAppSyncClientGQlSchemaOperationCalls.callCreateEventMutation();
+        //mAppSyncClientGQlSchemaOperationCalls.callDeleteEventMutation("3ac79d17-b08e-49e3-8690-22cb9b5a41fd");
+        //mAppSyncClientGQlSchemaOperationCalls.callSubscribeToEventCommentsSubscription("a127441e-d36d-49bc-928f-b836437b0450");
+
     }
 
 }
